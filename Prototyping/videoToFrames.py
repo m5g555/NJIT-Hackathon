@@ -14,7 +14,7 @@ def main(vidPath, targetFPS):
         for i in range(0,int(30/targetFPS)):
             ret, frame = vid.read()
         if ret:
-            imgName = ".\\frames\\frame"+str(curFrame)+".jpg"
+            imgName = ".\\frames\\frame{f:{fill}{width}}.jpg".format(f=curFrame, width=4, fill="0")
             print("creating image "+str(curFrame))
             cv.imwrite(imgName, frame)
             curFrame += int(30/(targetFPS))
@@ -24,4 +24,4 @@ def main(vidPath, targetFPS):
     vid.release()
     cv.destroyAllWindows()
         
-main(".\\Prototyping\\Learn the Disco-Bedience.mp4", 30)
+main(".\\Prototyping\\Learn the Disco-Bedience.mp4", 5)

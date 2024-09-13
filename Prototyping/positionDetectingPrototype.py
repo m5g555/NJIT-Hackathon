@@ -5,6 +5,7 @@ from mediapipe.framework.formats import landmark_pb2
 from mediapipe import solutions
 import glob
 import os
+import pathlib
 
 def draw_landmarks_on_image(rgb_image, detection_result):
   pose_landmarks_list = detection_result.pose_landmarks
@@ -45,10 +46,16 @@ with PoseLandmarker.create_from_options(options) as landmarker:
     curImg = 0
     if not (os.path.exists("annotatedImages")):
         os.makedirs("annotatedImages")
-    for i in glob.glob("C:\\Users\\Mitchel\\Documents\\NJIT Hackathon\\frames\\*.jpg"):
+    if not (os.path.exists("landmarkersData")):
+        os.makedirs("landmarkersData")
+    localData = open("landmarkersData\\localLandmarkersData.txt", "w")
+    globalData = open("landmarkersData\\globalLandmarkersData.txt", "w")
+    for i in glob.glob(".\\frames\\*.jpg"):
         mp_img = mp.Image.create_from_file(i)
         pose_landmarker_result = landmarker.detect(mp_img)
         annotated_image = draw_landmarks_on_image(mp_img.numpy_view(), pose_landmarker_result)
+        localData.write(str(pose_landmarker_result.pose_landmarks)+"\n")
+        globalData.write(str(pose_landmarker_result.pose_world_landmarks)+"\n")
         print("creating image "+str(curImg))
         status = cv.imwrite(".\\annotatedImages\\AnnotatedFrame{f:{fill}{width}}.jpg".format(f=curImg, fill="0", width=4), cv.cvtColor(annotated_image, cv.COLOR_RGB2BGR))
         curImg += 1
